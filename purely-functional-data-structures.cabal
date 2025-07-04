@@ -1,0 +1,32 @@
+cabal-version: 3.0
+name:          purely-functional-data-structures
+version:       0.1.0.0
+license:       MIT
+license-file:  LICENSE
+author:        James Santucci
+maintainer:    james.santucci@gmail.com
+copyright:     2024
+category:      Game
+build-type:    Simple
+
+common warnings
+  ghc-options: -Wall
+
+library
+  import:           warnings
+  exposed-modules:  Data.Okasaki.BinaryTree
+  build-depends:    base ^>=4.19
+  hs-source-dirs:   src
+  default-language: Haskell2010
+
+test-suite purely-functional-data-structures-test
+  import:           warnings
+  default-language: Haskell2010
+  other-modules:    Test.Data.Okasaki.BinaryTreeSpec
+  type:             exitcode-stdio-1.0
+  hs-source-dirs:   test
+  main-is:          Spec.hs
+  build-depends:
+    , base                               ^>=4.19
+    , hspec
+    , purely-functional-data-structures
