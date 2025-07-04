@@ -12,12 +12,9 @@ jobs:
       contents: "read"
     steps:
       - uses: actions/checkout@v4
-      - uses: nixbuild/nix-quick-install-action@v28
+      - uses: cachix/install-nix-action@v31
         with:
-          nix_conf: |
-            experimental-features = nix-command flakes
-            trusted-public-keys = hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ=
-            substituters = https://cache.iog.io
+          nix_path: nixpkgs=channel:nixos-unstable
       - uses: cachix/cachix-action@v16
         with:
           name: jisantuc
