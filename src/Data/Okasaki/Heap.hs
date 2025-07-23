@@ -30,9 +30,13 @@ insert v Leaf = singleton v
 insert v h@(Node rank' v' l r) =
   if v <= v'
     then Node (rank' + 1) v h Leaf
-    else Node rank' v' l $ insert v r
+    else
+      let inserted = insert v r
+       in if rank inserted > rank l
+            then Node rank' v' inserted l
+            else Node rank' v' l inserted
 
-merge :: (Show a, Ord a) => LeftistHeap a -> LeftistHeap a -> LeftistHeap a
+merge :: (Ord a) => LeftistHeap a -> LeftistHeap a -> LeftistHeap a
 merge Leaf h = h
 merge h Leaf = h
 merge h1@(Node _ x a1 b1) h2@(Node _ y a2 b2) =
@@ -48,10 +52,12 @@ merge h1@(Node _ x a1 b1) h2@(Node _ y a2 b2) =
         else Node (rank a + 1) x' b a
 
 findMin :: LeftistHeap a -> Maybe a
-findMin = undefined
+findMin Leaf = Nothing
+findMin (Node _ v _ _) = Just v
 
-deleteMin :: LeftistHeap a -> LeftistHeap a
-deleteMin = undefined
+deleteMin :: (Ord a) => LeftistHeap a -> LeftistHeap a
+deleteMin Leaf = Leaf
+deleteMin (Node _ _ l r) = merge l r
 
 {-# INLINE rank #-}
 rank :: LeftistHeap a -> Int
@@ -65,5 +71,5 @@ rankLeft (Node _ _ (Node r _ _ _) _) = r
 
 isLeftist :: (Show a) => LeftistHeap a -> Bool
 isLeftist Leaf = True
-isLeftist h@(Node rank' _ l r) =
-  rankLeft h >= rank' && isLeftist l && isLeftist r
+isLeftist h@(Node _ _ l r) =
+  rankLeft h >= rank r && isLeftist l && isLeftist r

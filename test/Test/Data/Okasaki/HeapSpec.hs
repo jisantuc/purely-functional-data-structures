@@ -4,7 +4,9 @@ import Data.Foldable (Foldable (foldl'))
 import Data.Functor ((<&>))
 import Data.Okasaki.Heap
   ( LeftistHeap,
+    deleteMin,
     empty,
+    findMin,
     insert,
     isLeftist,
     merge,
@@ -12,7 +14,7 @@ import Data.Okasaki.Heap
   )
 import Test.Hspec (Spec, describe, it, shouldBe)
 import Test.Hspec.QuickCheck (prop)
-import Test.QuickCheck (arbitrary, sized, vectorOf)
+import Test.QuickCheck (arbitrary, vectorOf)
 
 spec :: Spec
 spec = describe "HeapSpec" $ do
@@ -26,7 +28,7 @@ spec = describe "HeapSpec" $ do
           heap = foldl' merge empty heaps
        in isLeftist heap `shouldBe` True
     prop "merges to leftist heaps" $
-      vectorOf 3 arbitrary <&> \ints ->
+      vectorOf 100 arbitrary <&> \ints ->
         let heaps :: [LeftistHeap Int]
             heaps = singleton <$> ints
             heap = foldl' merge empty heaps
@@ -34,9 +36,16 @@ spec = describe "HeapSpec" $ do
   describe "insert" $ do
     it "inserts into empty heaps" $
       insert 3 (empty :: LeftistHeap Int) `shouldBe` singleton 3
-    prop "inserts to leftist heaps" $ vectorOf 8 arbitrary <&> \ints ->
-      let heaps :: [LeftistHeap Int]
-          heaps = singleton <$> take 7 ints 
-          baseHeap = foldl' merge empty heaps
-          finalHeap = (`insert` baseHeap) . (!! 7) $ ints
-       in isLeftist finalHeap
+    prop "inserts to leftist heaps" $
+      vectorOf 100 arbitrary <&> \ints ->
+        let heaps :: [LeftistHeap Int]
+            heaps = singleton <$> take 99 ints
+            baseHeap = foldl' merge empty heaps
+            finalHeap = (`insert` baseHeap) . (!! 99) $ ints
+         in isLeftist finalHeap
+  describe "deleteMin" $
+    it "deletes the min" $
+      let initialHeap = foldl' merge empty $ singleton <$> [1, 2, 3, 4 :: Integer]
+          expectedHeap = foldl' merge empty $ singleton <$> [2, 3, 4]
+          finalHeap = deleteMin initialHeap
+       in findMin finalHeap `shouldBe` findMin expectedHeap
