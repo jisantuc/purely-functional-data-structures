@@ -27,7 +27,10 @@ singleton v = Node 1 v Leaf Leaf
 
 insert :: (Ord a) => a -> LeftistHeap a -> LeftistHeap a
 insert v Leaf = singleton v
-insert v (Node rank' v' l r) = undefined
+insert v h@(Node rank' v' l r) =
+  if v <= v'
+    then Node (rank' + 1) v h Leaf
+    else Node rank' v' l $ insert v r
 
 merge :: (Show a, Ord a) => LeftistHeap a -> LeftistHeap a -> LeftistHeap a
 merge Leaf h = h
