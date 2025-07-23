@@ -1,11 +1,19 @@
-module Data.Okasaki.BinaryTree (BinaryTree, empty, insert, member, singleton) where
+module Data.Okasaki.BinaryTree
+  ( BinaryTree,
+    empty,
+    insert,
+    member,
+    rank,
+    singleton,
+  )
+where
 
 data BinaryTree a = Leaf | Node (BinaryTree a) a (BinaryTree a) deriving (Eq, Show)
 
-singleton :: Ord a => a -> BinaryTree a
+singleton :: (Ord a) => a -> BinaryTree a
 singleton a = Node Leaf a Leaf
 
-empty :: Ord a => BinaryTree a
+empty :: (Ord a) => BinaryTree a
 empty = Leaf
 
 member :: (Ord a) => BinaryTree a -> a -> Bool
@@ -21,3 +29,7 @@ insert tree@(Node left value right) a = case compare a value of
   EQ -> tree
   LT -> Node (left `insert` a) value right
   GT -> Node left value $ right `insert` a
+
+rank :: BinaryTree a -> Int
+rank Leaf = 0
+rank (Node l _ r) = 1 + min (rank l) (rank r)

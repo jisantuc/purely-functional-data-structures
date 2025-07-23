@@ -26,6 +26,7 @@ jobs:
           target: cabal:purely-functional-data-structures-test
           excludes: |
             Test.Data.Okasaki.BinaryTreeSpec
+            Test.Data.Okasaki.HeapSpec
       - name: Send coverage report
         uses: codecov/codecov-action@v4
         with:

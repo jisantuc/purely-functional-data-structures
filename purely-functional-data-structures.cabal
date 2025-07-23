@@ -15,6 +15,7 @@ common warnings
 library
   import:           warnings
   exposed-modules:  Data.Okasaki.BinaryTree
+                  , Data.Okasaki.Heap
   build-depends:    base ^>=4.19
   hs-source-dirs:   src
   default-language: Haskell2010
@@ -23,6 +24,7 @@ test-suite purely-functional-data-structures-test
   import:           warnings
   default-language: Haskell2010
   other-modules:    Test.Data.Okasaki.BinaryTreeSpec
+                  , Test.Data.Okasaki.HeapSpec
   type:             exitcode-stdio-1.0
   hs-source-dirs:   test
   main-is:          Spec.hs
@@ -30,3 +32,4 @@ test-suite purely-functional-data-structures-test
     , base                               ^>=4.19
     , hspec
     , purely-functional-data-structures
+    , QuickCheck
