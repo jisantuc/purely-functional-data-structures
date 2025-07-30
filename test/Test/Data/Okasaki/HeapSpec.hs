@@ -7,6 +7,7 @@ import Data.Okasaki.Heap
     deleteMin,
     empty,
     findMin,
+    fromList,
     insert,
     isLeftist,
     merge,
@@ -49,3 +50,14 @@ spec = describe "HeapSpec" $ do
           expectedHeap = foldl' merge empty $ singleton <$> [2, 3, 4]
           finalHeap = deleteMin initialHeap
        in findMin finalHeap `shouldBe` findMin expectedHeap
+  describe "fromList" $ do
+    prop "builds leftist heaps from lists" $
+      vectorOf 100 arbitrary <&> \ints ->
+        let heap :: LeftistHeap Int
+            heap = fromList ints
+         in isLeftist heap
+    prop "builds leftist heaps from lists with odd numbers of elements" $
+      vectorOf 99 arbitrary <&> \ints ->
+        let heap :: LeftistHeap Int
+            heap = fromList ints
+         in isLeftist heap
